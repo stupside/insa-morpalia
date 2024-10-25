@@ -23,8 +23,7 @@ add(X, Y, Color) :-
     integer(X), X >= 1, X < 8,
     column_height(X, Count), Y is Count + 1,
     integer(Y), Y >= 1, Y < 7,
-    asserta(pawn(X, Y, Color)),
-    write('Move added to board at ('), write(X), write(', '), write(Y), write(') for color '), write(Color), nl.
+    asserta(pawn(X, Y, Color)).
 
 remove(X) :- column_height(X, Count), retract(pawn(X, Count, _)).
 
@@ -38,15 +37,7 @@ play(X) :-
     (check_game_over(X, Y, rouge), ! ; play_ai(jaune)).
 
 play_ai(Color) :- 
-    ia(X, Y, Color),
-    nl, write('AI is making its move...'), nl,
-    ( add(X, Y, Color) ->
-        write('AI successfully placed move at: ('), write(X), write(', '), write(Y), write(')'), nl,
-        board, nl  % Display the board after adding the AI's move
-    ; 
-        write('Failed to place AI move.'), nl
-    ),
-    check_game_over(X, Y, Color).
+    ia(X, Y, Color) -> (board, nl, check_game_over(X, Y, Color), ! ; true).
 
 % Enhanced game-over check
 check_game_over(X, Y, Color) :-
